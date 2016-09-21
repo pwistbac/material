@@ -376,10 +376,20 @@ VirtualRepeatContainerController.prototype.resetScroll = function() {
   this.scrollTo(0);
 };
 
+var hoverTimer;
 
 VirtualRepeatContainerController.prototype.handleScroll_ = function() {
   var doc = angular.element(document)[0];
   var ltr = doc.dir != 'rtl' && doc.body.dir != 'rtl';
+  clearTimeout(hoverTimer);
+
+    if(!$("#testSuspendable").prop("classList").contains('disable-hover')) {
+      $("#testSuspendable").prop("classList").add('disable-hover')
+    }
+    hoverTimer = setTimeout(function(){
+      $("#testSuspendable").prop("classList").remove('disable-hover')
+    },200);
+
   if(!ltr && !this.maxSize) {
     this.scroller.scrollLeft = this.scrollSize;
     this.maxSize = this.scroller.scrollLeft;
