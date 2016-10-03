@@ -390,7 +390,6 @@ VirtualRepeatContainerController.prototype.handleScroll_ = function() {
 
      var suspendableDiv = this.scroller.querySelector("#testSuspendable");
      if (suspendableDiv) {
-       console.log(suspendableDiv);
        if(!$("#testSuspendable").prop("classList").contains('disable-hover')) {
          $("#testSuspendable").prop("classList").add('disable-hover')
        }
