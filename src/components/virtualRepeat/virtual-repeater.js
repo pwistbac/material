@@ -174,6 +174,10 @@ function VirtualRepeatContainerController(
 
     $scope.$emit('$md-resize-enable');
     $scope.$on('$md-resize', boundUpdateSize);
+    $scope.$on('virtual-scroll-top', angular.bind(this, function () {
+      this.scrollToIndex(0);
+    //      debouncedUpdateSize();
+    }));
   }));
 }
 
