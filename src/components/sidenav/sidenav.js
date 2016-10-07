@@ -474,7 +474,7 @@ function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming,
      * @param evt
      */
     function onKeyDown(ev) {
-      var isEscape = (ev.keyCode === $mdConstant.KEY_CODE.ESCAPE);
+      var isEscape = false; // (ev.keyCode === $mdConstant.KEY_CODE.ESCAPE);
       return isEscape ? close(ev) : $q.when(true);
     }
 
