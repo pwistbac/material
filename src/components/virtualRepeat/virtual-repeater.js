@@ -99,11 +99,12 @@ var NUM_EXTRA = 3;
 
 /** @ngInject */
 function VirtualRepeatContainerController(
-    $$rAF, $mdUtil, $parse, $rootScope, $window, $scope, $element, $attrs) {
+    $$rAF, $mdUtil, $parse, $rootScope, $window, $scope, $element, $attrs, $timeout) {
   this.$rootScope = $rootScope;
   this.$scope = $scope;
   this.$element = $element;
   this.$attrs = $attrs;
+  this.$timeout = $timeout;
 
   /** @type {number} The width or height of the container */
   this.size = 0;
@@ -150,6 +151,8 @@ function VirtualRepeatContainerController(
   this.sizer = this.scroller.querySelector('.md-virtual-repeat-sizer');
   this.offsetter = this.scroller.querySelector('.md-virtual-repeat-offsetter');
 
+  this.viewChange = true;
+
   // After the dom stablizes, measure the initial size of the container and
   // make a best effort at re-measuring as it changes.
   var boundUpdateSize = angular.bind(this, this.updateSize);
@@ -176,6 +179,7 @@ function VirtualRepeatContainerController(
     $scope.$on('$md-resize', boundUpdateSize);
     $scope.$on('virtual-scroll-top', angular.bind(this, function () {
       this.scrollToIndex(0);
+      this.viewChange = true;
     //      debouncedUpdateSize();
     }));
   }));
@@ -386,17 +390,25 @@ VirtualRepeatContainerController.prototype.handleScroll_ = function() {
   var doc = angular.element(document)[0];
   var ltr = doc.dir != 'rtl' && doc.body.dir != 'rtl';
 
-    clearTimeout(hoverTimer);
+  if(typeof hoverTimer !== "undefined" && !this.viewChange ){
+  this.$timeout.cancel(hoverTimer);
+  }
 
-     var suspendableDiv = this.scroller.querySelector("#testSuspendable");
-     if (suspendableDiv) {
-       if(!$("#testSuspendable").prop("classList").contains('disable-hover')) {
-         $("#testSuspendable").prop("classList").add('disable-hover')
-       }
-       hoverTimer = setTimeout(function(){
-         $("#testSuspendable").prop("classList").remove('disable-hover')
-       },200);
-     }
+  var suspendableDiv = this.scroller.querySelector("#testSuspendable");
+
+  if (suspendableDiv) {
+    if(!$("#testSuspendable").prop("classList").contains('disable-hover') && !this.viewChange ) {
+     $("#testSuspendable").prop("classList").add('disable-hover')
+    }
+
+
+  hoverTimer = this.$timeout(angular.bind(this, function () {
+    $("#testSuspendable").prop("classList").remove('disable-hover');
+    this.viewChange = false;
+    })
+    ,200);
+  }
+
 
   if(!ltr && !this.maxSize) {
     this.scroller.scrollLeft = this.scrollSize;
