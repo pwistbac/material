@@ -394,16 +394,17 @@ VirtualRepeatContainerController.prototype.handleScroll_ = function() {
   this.$timeout.cancel(hoverTimer);
   }
 
-  var suspendableDiv = this.scroller.querySelector("#testSuspendable");
+  // var suspendableDiv = this.scroller.querySelector("#testSuspendable");
+  var suspendableDiv = $(this.$element).find(".testSuspendable")
 
   if (suspendableDiv) {
-    if(!$("#testSuspendable").prop("classList").contains('disable-hover') && !this.viewChange ) {
-     $("#testSuspendable").prop("classList").add('disable-hover')
+    if(!suspendableDiv.prop("classList").contains('disable-hover') && !this.viewChange ) {
+      suspendableDiv.prop("classList").add('disable-hover')
     }
 
 
   hoverTimer = this.$timeout(angular.bind(this, function () {
-    $("#testSuspendable").prop("classList").remove('disable-hover');
+    suspendableDiv.prop("classList").remove('disable-hover');
     this.viewChange = false;
     })
     ,200);
